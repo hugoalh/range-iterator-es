@@ -7,7 +7,7 @@
 [![JSR: @hugoalh/range-iterator](https://img.shields.io/jsr/v/@hugoalh/range-iterator?label=@hugoalh/range-iterator&labelColor=F7DF1E&logo=jsr&logoColor=000000&style=flat "JSR: @hugoalh/range-iterator")](https://jsr.io/@hugoalh/range-iterator)
 [![NPM: @hugoalh/range-iterator](https://img.shields.io/npm/v/@hugoalh/range-iterator?label=@hugoalh/range-iterator&labelColor=CB3837&logo=npm&logoColor=ffffff&style=flat "NPM: @hugoalh/range-iterator")](https://www.npmjs.com/package/@hugoalh/range-iterator)
 
-An ES (JavaScript & TypeScript) module to iterate between range.
+An ECMAScript (JavaScript & TypeScript) module to iterate between range.
 
 ## 🔰 Begin
 
