@@ -1,16 +1,9 @@
 function resolveCharacterCodePoint(parameterName: string, item: string): number {
-	try {
-		if ([...item].length !== 1) {
-			throw undefined;
-		}
-		const result: number | undefined = item.codePointAt(0);
-		if (typeof result === "undefined") {
-			throw undefined;
-		}
-		return result;
-	} catch {
-		throw new RangeError(`\`${item}\` (parameter \`${parameterName}\`) is not a character which is in code point range 0 ~ 1114111!`);
+	const codePoint: number | undefined = item.codePointAt(0);
+	if (item.length > 0 && typeof codePoint !== "undefined" && item.length === String.fromCodePoint(codePoint).length) {
+		return codePoint;
 	}
+	throw new RangeError(`\`${item}\` (parameter \`${parameterName}\`) is not a character which is in code point range 0 ~ 1114111!`);
 }
 /**
  * Accept type of the range iterator.
