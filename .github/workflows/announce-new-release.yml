@@ -29,8 +29,6 @@ jobs:
               fields:
                 - name: "📋 Changelog"
                   value: "${{github.event.release.html_url}}"
-                - name: "Deno Land"
-                  value: "https://deno.land/x/range_iterator"
                 - name: "GitHub"
                   value: "${{github.event.repository.html_url}}"
                 - name: "JSR"
