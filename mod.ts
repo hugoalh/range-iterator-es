@@ -30,7 +30,7 @@ export interface RangeIteratorOptions<T extends bigint | number> {
 	 */
 	startExclusive?: boolean;
 	/**
-	 * Step of the decrement (`start` is smaller than `end`) or increment (`start` is bigger than `end`) of the iterate. By default, it is 1 step.
+	 * Step of the increment (when `start` is smaller than `end`) or decrement (when `start` is bigger than `end`) of the iterate. By default, it is 1 step.
 	 * 
 	 * For iterate numbers, this property also accept float number.
 	 */
@@ -42,22 +42,40 @@ export interface RangeIteratorOptions<T extends bigint | number> {
 	 */
 	exclusiveEnd?: boolean;
 }
-function rangeLooperNumerics(start: bigint, end: bigint, step: bigint, startExclusive: boolean, endExclusive: boolean): Generator<bigint>;
-function rangeLooperNumerics(start: number, end: number, step: number, startExclusive: boolean, endExclusive: boolean): Generator<number>;
-function* rangeLooperNumerics(start: bigint | number, end: bigint | number, step: bigint | number, startExclusive: boolean, endExclusive: boolean): Generator<bigint | number> {
-	const isReverse: boolean = start > end;
-	//@ts-ignore Overloads.
-	for (let current: bigint | number = start; isReverse ? (current >= end) : (current <= end); current += isReverse ? -step : step) {
-		if (!(
-			(startExclusive && current === start) ||
-			(endExclusive && current === end)
-		)) {
-			yield current;
+function rangeLooperNumerics(start: bigint, end: bigint, options: Required<Omit<RangeIteratorOptions<bigint>, "exclusiveEnd">>): Generator<bigint>;
+function rangeLooperNumerics(start: number, end: number, options: Required<Omit<RangeIteratorOptions<number>, "exclusiveEnd">>): Generator<number>;
+function* rangeLooperNumerics(start: bigint | number, end: bigint | number, options: Required<Omit<RangeIteratorOptions<bigint | number>, "exclusiveEnd">>): Generator<bigint | number> {
+	const {
+		endExclusive,
+		startExclusive,
+		step
+	}: Required<Omit<RangeIteratorOptions<bigint | number>, "exclusiveEnd">> = options;
+	if (start <= end) {
+		// Increment
+		//@ts-ignore Overload.
+		for (let current: bigint | number = start; current <= end; current += step) {
+			if (!(
+				(startExclusive && current === start) ||
+				(endExclusive && current === end)
+			)) {
+				yield current;
+			}
+		}
+	} else {
+		// Decrement
+		//@ts-ignore Overload.
+		for (let current: bigint | number = start; current >= end; current -= step) {
+			if (!(
+				(startExclusive && current === start) ||
+				(endExclusive && current === end)
+			)) {
+				yield current;
+			}
 		}
 	}
 }
-function* rangeLooperCharacters(start: number, end: number, step: number, startExclusive: boolean, endExclusive: boolean): Generator<string> {
-	for (const element of rangeLooperNumerics(start, end, step, startExclusive, endExclusive)) {
+function* rangeLooperCharacters(start: number, end: number, options: Required<Omit<RangeIteratorOptions<number>, "exclusiveEnd">>): Generator<string> {
+	for (const element of rangeLooperNumerics(start, end, options)) {
 		yield String.fromCodePoint(element);
 	}
 }
@@ -197,7 +215,11 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 				throw new RangeError(`\`${options.step}\` (parameter \`options.step\`) is not a bigint which is > 0!`);
 			}
 		}
-		return rangeLooperNumerics(start, end, options.step ?? 1n, startExclusive, endExclusive);
+		return rangeLooperNumerics(start, end, {
+			endExclusive,
+			startExclusive,
+			step: options.step ?? 1n
+		});
 	}
 	if (typeof start === "number" && typeof end === "number") {
 		if (typeof options.step !== "undefined") {
@@ -205,7 +227,11 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 				throw new RangeError(`\`${options.step}\` (parameter \`options.step\`) is not a number which is > 0!`);
 			}
 		}
-		return rangeLooperNumerics(start, end, options.step ?? 1, startExclusive, endExclusive);
+		return rangeLooperNumerics(start, end, {
+			endExclusive,
+			startExclusive,
+			step: options.step ?? 1
+		});
 	}
 	if (typeof start === "string" && typeof end === "string") {
 		const startCodePoint: number = resolveCharacterCodePoint("start", start);
@@ -215,7 +241,11 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 				throw new RangeError(`\`${options.step}\` (parameter \`options.step\`) is not a number which is integer, safe, and > 0!`);
 			}
 		}
-		return rangeLooperCharacters(startCodePoint, endCodePoint, options.step ?? 1, startExclusive, endExclusive);
+		return rangeLooperCharacters(startCodePoint, endCodePoint, {
+			endExclusive,
+			startExclusive,
+			step: options.step ?? 1
+		});
 	}
 	throw new TypeError(`Parameters \`start\` and \`end\` are not bigints, numbers, or strings (character)!`);
 }
