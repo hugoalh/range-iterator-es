@@ -30,7 +30,7 @@ Deno.test("BigInteger 1~1000", { permissions: "none" }, () => {
 Deno.test("Number 1~1000", { permissions: "none" }, () => {
 	deepStrictEqual(Array.from(rangeIterator(1, 1000)).length, 1000);
 });
-Deno.bench("CharacterCodePoint 0~1114111", { permissions: "none" }, () => {
+Deno.test("CharacterCodePoint 0~1114111", { permissions: "none" }, () => {
 	deepStrictEqual(Array.from(rangeIterator("\u0000", "\u{10FFFF}")).length, 1114112);
 });
 Deno.test("BigInteger 1000~1", { permissions: "none" }, () => {
@@ -39,6 +39,6 @@ Deno.test("BigInteger 1000~1", { permissions: "none" }, () => {
 Deno.test("Number 1000~1", { permissions: "none" }, () => {
 	deepStrictEqual(Array.from(rangeIterator(1000, 1)).length, 1000);
 });
-Deno.bench("CharacterCodePoint 1114111~0", { permissions: "none" }, () => {
+Deno.test("CharacterCodePoint 1114111~0", { permissions: "none" }, () => {
 	deepStrictEqual(Array.from(rangeIterator("\u{10FFFF}", "\u0000")).length, 1114112);
 });
