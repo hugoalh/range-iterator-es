@@ -40,13 +40,13 @@ Deno.bench("Character z~a", { permissions: "none" }, () => {
 	}
 });
 
-Deno.bench("BigInteger 1~100", { permissions: "none" }, () => {
-	for (const value of rangeIterator(1n, 100n)) {
+Deno.bench("BigInteger 1~1000", { permissions: "none" }, () => {
+	for (const value of rangeIterator(1n, 1000n)) {
 		void value;
 	}
 });
-Deno.bench("Number 1~100", { permissions: "none" }, () => {
-	for (const value of rangeIterator(1, 100)) {
+Deno.bench("Number 1~1000", { permissions: "none" }, () => {
+	for (const value of rangeIterator(1, 1000)) {
 		void value;
 	}
 });
@@ -55,13 +55,13 @@ Deno.bench("CharacterCodePoint 0~1114111", { permissions: "none" }, () => {
 		void value;
 	}
 });
-Deno.bench("BigInteger 100~1", { permissions: "none" }, () => {
-	for (const value of rangeIterator(100n, 1n)) {
+Deno.bench("BigInteger 1000~1", { permissions: "none" }, () => {
+	for (const value of rangeIterator(1000n, 1n)) {
 		void value;
 	}
 });
-Deno.bench("Number 100~1", { permissions: "none" }, () => {
-	for (const value of rangeIterator(100, 1)) {
+Deno.bench("Number 1000~1", { permissions: "none" }, () => {
+	for (const value of rangeIterator(1000, 1)) {
 		void value;
 	}
 });
