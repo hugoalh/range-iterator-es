@@ -6,57 +6,41 @@ function resolveCharacterCodePoint(parameterName: string, item: string): number 
 	throw new RangeError(`\`${item}\` (parameter \`${parameterName}\`) is not a character which is in code point range 0 ~ 1114111!`);
 }
 /**
- * Accept type of the range iterator.
- * @deprecated
- */
-export type RangeIteratorAcceptType = bigint | number | string;
-/**
- * Index type of the range iterator.
- * @deprecated
- */
-export type RangeIteratorIndexType<T extends RangeIteratorAcceptType> = T extends bigint ? bigint : number;
-/**
- * Options of the range iterator.
+ * Options of the {@linkcode rangeIterator}.
  */
 export interface RangeIteratorOptions<T extends bigint | number> {
 	/**
-	 * Whether the end of the range is exclusive.
+	 * Whether to exclude the end value of the range.
 	 * @default {false}
 	 */
-	endExclusive?: boolean;
+	excludeEnd?: boolean;
 	/**
-	 * Whether the start of the range is exclusive.
+	 * Whether to exclude the start value of the range.
 	 * @default {false}
 	 */
-	startExclusive?: boolean;
+	excludeStart?: boolean;
 	/**
 	 * Step of the increment (when `start` is smaller than `end`) or decrement (when `start` is bigger than `end`) of the iterate. By default, it is 1 step.
 	 * 
-	 * For iterate numbers, this property also accept float number.
+	 * When iterate numbers, this property also accept float number.
 	 */
 	step?: T;
-	/**
-	 * Whether the end of the range is exclusive. Alias of the property {@linkcode endExclusive}.
-	 * @default {false}
-	 * @deprecated Use property {@linkcode endExclusive} instead.
-	 */
-	exclusiveEnd?: boolean;
 }
-function rangeLooperNumerics(start: bigint, end: bigint, options: Required<Omit<RangeIteratorOptions<bigint>, "exclusiveEnd">>): Generator<bigint>;
-function rangeLooperNumerics(start: number, end: number, options: Required<Omit<RangeIteratorOptions<number>, "exclusiveEnd">>): Generator<number>;
-function* rangeLooperNumerics(start: bigint | number, end: bigint | number, options: Required<Omit<RangeIteratorOptions<bigint | number>, "exclusiveEnd">>): Generator<bigint | number> {
+function rangeIteratorNumerics(start: bigint, end: bigint, options: Required<RangeIteratorOptions<bigint>>): Generator<bigint>;
+function rangeIteratorNumerics(start: number, end: number, options: Required<RangeIteratorOptions<number>>): Generator<number>;
+function* rangeIteratorNumerics(start: bigint | number, end: bigint | number, options: Required<RangeIteratorOptions<bigint | number>>): Generator<bigint | number> {
 	const {
-		endExclusive,
-		startExclusive,
+		excludeEnd,
+		excludeStart,
 		step
-	}: Required<Omit<RangeIteratorOptions<bigint | number>, "exclusiveEnd">> = options;
+	}: Required<RangeIteratorOptions<bigint | number>> = options;
 	if (start <= end) {
 		// Increment
 		//@ts-ignore Overload.
 		for (let current: bigint | number = start; current <= end; current += step) {
 			if (!(
-				(startExclusive && current === start) ||
-				(endExclusive && current === end)
+				(excludeStart && current === start) ||
+				(excludeEnd && current === end)
 			)) {
 				yield current;
 			}
@@ -66,16 +50,16 @@ function* rangeLooperNumerics(start: bigint | number, end: bigint | number, opti
 		//@ts-ignore Overload.
 		for (let current: bigint | number = start; current >= end; current -= step) {
 			if (!(
-				(startExclusive && current === start) ||
-				(endExclusive && current === end)
+				(excludeStart && current === start) ||
+				(excludeEnd && current === end)
 			)) {
 				yield current;
 			}
 		}
 	}
 }
-function* rangeLooperCharacters(start: number, end: number, options: Required<Omit<RangeIteratorOptions<number>, "exclusiveEnd">>): Generator<string> {
-	for (const element of rangeLooperNumerics(start, end, options)) {
+function* rangeIteratorCharacters(start: number, end: number, options: Required<RangeIteratorOptions<number>>): Generator<string> {
+	for (const element of rangeIteratorNumerics(start, end, options)) {
 		yield String.fromCodePoint(element);
 	}
 }
@@ -90,9 +74,9 @@ function* rangeLooperCharacters(start: number, end: number, options: Required<Om
  * Array.from(rangeIterator(1n, 9n));
  * //=> [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n, 9n]
  * ```
- * @example Iterate big integers from 1 to 9 with exclusive end
+ * @example Iterate big integers from 1 to 9 with exclude end
  * ```ts
- * Array.from(rangeIterator(1n, 9n, { endExclusive: true }));
+ * Array.from(rangeIterator(1n, 9n, { excludeEnd: true }));
  * //=> [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n]
  * ```
  * @example Iterate big integers from 9 to 1
@@ -131,9 +115,9 @@ export function rangeIterator(start: bigint, end: bigint, step: bigint): Generat
  * Array.from(rangeIterator(1, 9));
  * //=> [1, 2, 3, 4, 5, 6, 7, 8, 9]
  * ```
- * @example Iterate numbers from 1 to 9 with exclusive end
+ * @example Iterate numbers from 1 to 9 with exclude end
  * ```ts
- * Array.from(rangeIterator(1, 9, { endExclusive: true }));
+ * Array.from(rangeIterator(1, 9, { excludeEnd: true }));
  * //=> [1, 2, 3, 4, 5, 6, 7, 8]
  * ```
  * @example Iterate numbers from 9 to 1
@@ -172,9 +156,9 @@ export function rangeIterator(start: number, end: number, step: number): Generat
  * Array.from(rangeIterator("a", "g"));
  * //=> ["a", "b", "c", "d", "e", "f", "g"]
  * ```
- * @example Iterate characters from "a" to "g" with exclusive end
+ * @example Iterate characters from "a" to "g" with exclude end
  * ```ts
- * Array.from(rangeIterator("a", "g", { endExclusive: true }));
+ * Array.from(rangeIterator("a", "g", { excludeEnd: true }));
  * //=> ["a", "b", "c", "d", "e", "f"]
  * ```
  * @example Iterate characters from "g" to "a"
@@ -207,17 +191,19 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 		typeof param2 === "bigint" ||
 		typeof param2 === "number"
 	) ? { step: param2 } : (param2 ?? {});
-	const { startExclusive = false }: RangeIteratorOptions<bigint | number> = options;
-	const endExclusive: boolean = options.endExclusive ?? options.exclusiveEnd ?? false;
+	const {
+		excludeEnd = false,
+		excludeStart = false
+	}: RangeIteratorOptions<bigint | number> = options;
 	if (typeof start === "bigint" && typeof end === "bigint") {
 		if (typeof options.step !== "undefined") {
 			if (!(typeof options.step === "bigint" && options.step > 0n)) {
 				throw new RangeError(`\`${options.step}\` (parameter \`options.step\`) is not a bigint which is > 0!`);
 			}
 		}
-		return rangeLooperNumerics(start, end, {
-			endExclusive,
-			startExclusive,
+		return rangeIteratorNumerics(start, end, {
+			excludeEnd,
+			excludeStart,
 			step: options.step ?? 1n
 		});
 	}
@@ -227,9 +213,9 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 				throw new RangeError(`\`${options.step}\` (parameter \`options.step\`) is not a number which is > 0!`);
 			}
 		}
-		return rangeLooperNumerics(start, end, {
-			endExclusive,
-			startExclusive,
+		return rangeIteratorNumerics(start, end, {
+			excludeEnd,
+			excludeStart,
 			step: options.step ?? 1
 		});
 	}
@@ -241,9 +227,9 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 				throw new RangeError(`\`${options.step}\` (parameter \`options.step\`) is not a number which is integer, safe, and > 0!`);
 			}
 		}
-		return rangeLooperCharacters(startCodePoint, endCodePoint, {
-			endExclusive,
-			startExclusive,
+		return rangeIteratorCharacters(startCodePoint, endCodePoint, {
+			excludeEnd,
+			excludeStart,
 			step: options.step ?? 1
 		});
 	}

@@ -4,8 +4,8 @@ Deno.bench("Number 1~9", { permissions: "none" }, () => {
 		void value;
 	}
 });
-Deno.bench("BigInteger 1~9 EndExclusive", { permissions: "none" }, () => {
-	for (const value of rangeIterator(1n, 9n, { endExclusive: true })) {
+Deno.bench("BigInteger 1~9 ExcludeEnd", { permissions: "none" }, () => {
+	for (const value of rangeIterator(1n, 9n, { excludeEnd: true })) {
 		void value;
 	}
 });
@@ -24,8 +24,8 @@ Deno.bench("Number 9~1", { permissions: "none" }, () => {
 		void value;
 	}
 });
-Deno.bench("BigInteger 9~1 EndExclusive", { permissions: "none" }, () => {
-	for (const value of rangeIterator(9n, 1n, { endExclusive: true })) {
+Deno.bench("BigInteger 9~1 ExcludeEnd", { permissions: "none" }, () => {
+	for (const value of rangeIterator(9n, 1n, { excludeEnd: true })) {
 		void value;
 	}
 });

@@ -63,8 +63,8 @@ An ECMAScript (JavaScript & TypeScript) module to iterate between range.
   ```
 - ```ts
   interface RangeIteratorOptions<T extends bigint | number> {
-    endExclusive?: boolean;
-    startExclusive?: boolean;
+    excludeEnd?: boolean;
+    excludeStart?: boolean;
     step?: T;
   }
   ```
@@ -81,9 +81,9 @@ An ECMAScript (JavaScript & TypeScript) module to iterate between range.
   Array.from(rangeIterator(1, 9));
   //=> [1, 2, 3, 4, 5, 6, 7, 8, 9]
   ```
-- Iterate big integers from 1 to 9 with exclusive end
+- Iterate big integers from 1 to 9 with exclude end
   ```ts
-  Array.from(rangeIterator(1n, 9n, { endExclusive: true }));
+  Array.from(rangeIterator(1n, 9n, { excludeEnd: true }));
   //=> [1n, 2n, 3n, 4n, 5n, 6n, 7n, 8n]
   ```
 - Iterate numbers from 1 to 9 with increment by 0.5 steps
@@ -101,9 +101,9 @@ An ECMAScript (JavaScript & TypeScript) module to iterate between range.
   Array.from(rangeIterator(9, 1));
   //=> [9, 8, 7, 6, 5, 4, 3, 2, 1]
   ```
-- Iterate big integers from 9 to 1 with exclusive end
+- Iterate big integers from 9 to 1 with exclude end
   ```ts
-  Array.from(rangeIterator(9n, 1n, { endExclusive: true }));
+  Array.from(rangeIterator(9n, 1n, { excludeEnd: true }));
   //=> [9n, 8n, 7n, 6n, 5n, 4n, 3n, 2n]
   ```
 - Iterate numbers from 9 to 1 with decrement by 0.5 steps
