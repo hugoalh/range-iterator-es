@@ -58,14 +58,15 @@ An ECMAScript (JavaScript & TypeScript) module to iterate between range.
   function rangeIterator(start: bigint, end: bigint, step: bigint): Generator<bigint>;
   function rangeIterator(start: number, end: number, options?: RangeIteratorOptions<number>): Generator<number>;
   function rangeIterator(start: number, end: number, step: number): Generator<number>;
-  function rangeIterator(start: string, end: string, options?: RangeIteratorOptions<number>): Generator<string>;
+  function rangeIterator(start: string, end: string, options?: RangeIteratorOptions<string>): Generator<string>;
   function rangeIterator(start: string, end: string, step: number): Generator<string>;
   ```
 - ```ts
-  interface RangeIteratorOptions<T extends bigint | number> {
+  interface RangeIteratorOptions<T extends bigint | number | string> {
     excludeEnd?: boolean;
+    excludes?: readonly T[] | Set<T>;
     excludeStart?: boolean;
-    step?: T;
+    step?: T extends string ? number : T;
   }
   ```
 

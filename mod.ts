@@ -8,12 +8,16 @@ function resolveCharacterCodePoint(parameterName: string, item: string): number 
 /**
  * Options of the {@linkcode rangeIterator}.
  */
-export interface RangeIteratorOptions<T extends bigint | number> {
+export interface RangeIteratorOptions<T extends bigint | number | string> {
 	/**
 	 * Whether to exclude the end value of the range.
 	 * @default {false}
 	 */
 	excludeEnd?: boolean;
+	/**
+	 * Exclude specify values.
+	 */
+	excludes?: readonly T[] | Set<T>;
 	/**
 	 * Whether to exclude the start value of the range.
 	 * @default {false}
@@ -24,23 +28,28 @@ export interface RangeIteratorOptions<T extends bigint | number> {
 	 * 
 	 * When iterate numbers, this property also accept float number.
 	 */
-	step?: T;
+	step?: T extends string ? number : T;
 }
-function rangeIteratorNumerics(start: bigint, end: bigint, options: Required<RangeIteratorOptions<bigint>>): Generator<bigint>;
-function rangeIteratorNumerics(start: number, end: number, options: Required<RangeIteratorOptions<number>>): Generator<number>;
-function* rangeIteratorNumerics(start: bigint | number, end: bigint | number, options: Required<RangeIteratorOptions<bigint | number>>): Generator<bigint | number> {
+interface RangeIteratorOptionsInternal<T extends bigint | number | string> extends Required<RangeIteratorOptions<T>> {
+	excludes: Set<T>;
+}
+function rangeIteratorNumerics(start: bigint, end: bigint, options: RangeIteratorOptionsInternal<bigint>): Generator<bigint>;
+function rangeIteratorNumerics(start: number, end: number, options: RangeIteratorOptionsInternal<number>): Generator<number>;
+function* rangeIteratorNumerics(start: bigint | number, end: bigint | number, options: RangeIteratorOptionsInternal<bigint | number>): Generator<bigint | number> {
 	const {
 		excludeEnd,
+		excludes,
 		excludeStart,
 		step
-	}: Required<RangeIteratorOptions<bigint | number>> = options;
+	}: RangeIteratorOptionsInternal<bigint | number> = options;
 	if (start <= end) {
 		// Increment
 		//@ts-ignore Overload.
 		for (let current: bigint | number = start; current <= end; current += step) {
 			if (!(
 				(excludeStart && current === start) ||
-				(excludeEnd && current === end)
+				(excludeEnd && current === end) ||
+				excludes.has(current)
 			)) {
 				yield current;
 			}
@@ -51,16 +60,24 @@ function* rangeIteratorNumerics(start: bigint | number, end: bigint | number, op
 		for (let current: bigint | number = start; current >= end; current -= step) {
 			if (!(
 				(excludeStart && current === start) ||
-				(excludeEnd && current === end)
+				(excludeEnd && current === end) ||
+				excludes.has(current)
 			)) {
 				yield current;
 			}
 		}
 	}
 }
-function* rangeIteratorCharacters(start: number, end: number, options: Required<RangeIteratorOptions<number>>): Generator<string> {
-	for (const element of rangeIteratorNumerics(start, end, options)) {
-		yield String.fromCodePoint(element);
+function* rangeIteratorCharacters(start: number, end: number, options: RangeIteratorOptionsInternal<string>): Generator<string> {
+	const { excludes }: RangeIteratorOptionsInternal<string> = options;
+	for (const current of rangeIteratorNumerics(start, end, {
+		...options,
+		excludes: new Set<number>()
+	})) {
+		const currentString: string = String.fromCodePoint(current);
+		if (!excludes.has(currentString)) {
+			yield currentString;
+		}
 	}
 }
 /**
@@ -149,7 +166,7 @@ export function rangeIterator(start: number, end: number, step: number): Generat
  * Range iterator with characters.
  * @param {string} start A character to start the iterate.
  * @param {string} end A character to end the iterate.
- * @param {RangeIteratorOptions<number>} [options] Options.
+ * @param {RangeIteratorOptions<string>} [options] Options.
  * @returns {Generator<string>}
  * @example Iterate characters from "a" to "g"
  * ```ts
@@ -167,7 +184,7 @@ export function rangeIterator(start: number, end: number, step: number): Generat
  * //=> ["g", "f", "e", "d", "c", "b", "a"]
  * ```
  */
-export function rangeIterator(start: string, end: string, options?: RangeIteratorOptions<number>): Generator<string>;
+export function rangeIterator(start: string, end: string, options?: RangeIteratorOptions<string>): Generator<string>;
 /**
  * Range iterator with characters.
  * @param {string} start A character to start the iterate.
@@ -186,15 +203,17 @@ export function rangeIterator(start: string, end: string, options?: RangeIterato
  * ```
  */
 export function rangeIterator(start: string, end: string, step: number): Generator<string>;
-export function rangeIterator(start: bigint | number | string, end: bigint | number | string, param2?: bigint | number | RangeIteratorOptions<bigint | number>): Generator<bigint | number | string> {
-	const options: RangeIteratorOptions<bigint | number> = (
+export function rangeIterator(start: bigint | number | string, end: bigint | number | string, param2?: bigint | number | RangeIteratorOptions<bigint | number | string>): Generator<bigint | number | string> {
+	const options: RangeIteratorOptions<bigint | number | string> = (
 		typeof param2 === "bigint" ||
 		typeof param2 === "number"
 	) ? { step: param2 } : (param2 ?? {});
 	const {
 		excludeEnd = false,
+		excludes,
 		excludeStart = false
-	}: RangeIteratorOptions<bigint | number> = options;
+	}: RangeIteratorOptions<bigint | number | string> = options;
+	const excludesFmt: Set<bigint | number | string> = (excludes instanceof Set) ? excludes : new Set(excludes);
 	if (typeof start === "bigint" && typeof end === "bigint") {
 		if (typeof options.step !== "undefined") {
 			if (!(typeof options.step === "bigint" && options.step > 0n)) {
@@ -203,6 +222,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 		}
 		return rangeIteratorNumerics(start, end, {
 			excludeEnd,
+			excludes: excludesFmt as Set<bigint>,
 			excludeStart,
 			step: options.step ?? 1n
 		});
@@ -215,6 +235,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 		}
 		return rangeIteratorNumerics(start, end, {
 			excludeEnd,
+			excludes: excludesFmt as Set<number>,
 			excludeStart,
 			step: options.step ?? 1
 		});
@@ -229,6 +250,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 		}
 		return rangeIteratorCharacters(startCodePoint, endCodePoint, {
 			excludeEnd,
+			excludes: excludesFmt as Set<string>,
 			excludeStart,
 			step: options.step ?? 1
 		});
