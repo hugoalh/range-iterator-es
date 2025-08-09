@@ -30,27 +30,21 @@ export interface RangeIteratorOptions<T extends bigint | number | string> {
 	 */
 	step?: T extends string ? number : T;
 }
-interface RangeIteratorOptionsInternal<T extends bigint | number | string> extends Required<RangeIteratorOptions<T>> {
+interface RangeIteratorOptionsInternal<T extends bigint | number | string> extends Required<Pick<RangeIteratorOptions<T>, "excludes" | "step">> {
 	excludes: Set<T>;
 }
 function rangeIteratorNumerics(start: bigint, end: bigint, options: RangeIteratorOptionsInternal<bigint>): Generator<bigint>;
 function rangeIteratorNumerics(start: number, end: number, options: RangeIteratorOptionsInternal<number>): Generator<number>;
 function* rangeIteratorNumerics(start: bigint | number, end: bigint | number, options: RangeIteratorOptionsInternal<bigint | number>): Generator<bigint | number> {
 	const {
-		excludeEnd,
 		excludes,
-		excludeStart,
 		step
 	}: RangeIteratorOptionsInternal<bigint | number> = options;
 	if (start <= end) {
 		// Increment
 		//@ts-ignore Overload.
 		for (let current: bigint | number = start; current <= end; current += step) {
-			if (!(
-				(excludeStart && current === start) ||
-				(excludeEnd && current === end) ||
-				excludes.has(current)
-			)) {
+			if (!excludes.has(current)) {
 				yield current;
 			}
 		}
@@ -58,11 +52,7 @@ function* rangeIteratorNumerics(start: bigint | number, end: bigint | number, op
 		// Decrement
 		//@ts-ignore Overload.
 		for (let current: bigint | number = start; current >= end; current -= step) {
-			if (!(
-				(excludeStart && current === start) ||
-				(excludeEnd && current === end) ||
-				excludes.has(current)
-			)) {
+			if (!excludes.has(current)) {
 				yield current;
 			}
 		}
@@ -214,6 +204,12 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 		excludeStart = false
 	}: RangeIteratorOptions<bigint | number | string> = options;
 	const excludesFmt: Set<bigint | number | string> = (excludes instanceof Set) ? excludes : new Set(excludes);
+	if (excludeEnd) {
+		excludesFmt.add(end);
+	}
+	if (excludeStart) {
+		excludesFmt.add(start);
+	}
 	if (typeof start === "bigint" && typeof end === "bigint") {
 		if (typeof options.step !== "undefined") {
 			if (!(typeof options.step === "bigint" && options.step > 0n)) {
@@ -221,9 +217,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 			}
 		}
 		return rangeIteratorNumerics(start, end, {
-			excludeEnd,
 			excludes: excludesFmt as Set<bigint>,
-			excludeStart,
 			step: options.step ?? 1n
 		});
 	}
@@ -234,9 +228,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 			}
 		}
 		return rangeIteratorNumerics(start, end, {
-			excludeEnd,
 			excludes: excludesFmt as Set<number>,
-			excludeStart,
 			step: options.step ?? 1
 		});
 	}
@@ -249,9 +241,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 			}
 		}
 		return rangeIteratorCharacters(startCodePoint, endCodePoint, {
-			excludeEnd,
 			excludes: excludesFmt as Set<string>,
-			excludeStart,
 			step: options.step ?? 1
 		});
 	}

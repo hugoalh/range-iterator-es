@@ -64,12 +64,12 @@ Deno.bench("Character z~a", { permissions: "none" }, () => {
 		void element;
 	}
 });
-Deno.bench("Character u0~u1114111", { permissions: "none" }, () => {
+Deno.bench("Character u0~u10FFFF", { permissions: "none" }, () => {
 	for (const element of rangeIterator("\u0000", "\u{10FFFF}")) {
 		void element;
 	}
 });
-Deno.bench("Character u1114111~u0", { permissions: "none" }, () => {
+Deno.bench("Character u10FFFF~u0", { permissions: "none" }, () => {
 	for (const element of rangeIterator("\u{10FFFF}", "\u0000")) {
 		void element;
 	}

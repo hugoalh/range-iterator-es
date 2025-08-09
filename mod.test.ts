@@ -39,9 +39,9 @@ Deno.test("Character a~z", { permissions: "none" }, () => {
 Deno.test("Character z~a", { permissions: "none" }, () => {
 	deepStrictEqual(Array.from(rangeIterator("z", "a")), ["z", "y", "x", "w", "v", "u", "t", "s", "r", "q", "p", "o", "n", "m", "l", "k", "j", "i", "h", "g", "f", "e", "d", "c", "b", "a"]);
 });
-Deno.test("Character u0~u1114111", { permissions: "none" }, () => {
+Deno.test("Character u0~u10FFFF", { permissions: "none" }, () => {
 	deepStrictEqual(Array.from(rangeIterator("\u0000", "\u{10FFFF}")).length, 1114112);
 });
-Deno.test("Character u1114111~u0", { permissions: "none" }, () => {
+Deno.test("Character u10FFFF~u0", { permissions: "none" }, () => {
 	deepStrictEqual(Array.from(rangeIterator("\u{10FFFF}", "\u0000")).length, 1114112);
 });
