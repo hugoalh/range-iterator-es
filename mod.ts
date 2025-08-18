@@ -5,9 +5,6 @@ function resolveCharacterCodePoint(parameterName: string, item: string): number 
 	}
 	throw new RangeError(`\`${item}\` (parameter \`${parameterName}\`) is not a character which is in code point range 0 ~ 1114111!`);
 }
-/**
- * Options of the {@linkcode rangeIterator}.
- */
 export interface RangeIteratorOptions<T extends bigint | number | string> {
 	/**
 	 * Whether to exclude the end value of the range.
