@@ -29,6 +29,7 @@
 			".vscode/**",
 			"dist/**",
 			".*.lint.ts",
+			".codeql.yml",
 			".dnt.ts",
 			".gitattributes",
 			".gitignore",
