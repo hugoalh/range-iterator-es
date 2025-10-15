@@ -44,6 +44,38 @@
 	},
 	"lock": false,
 	"tasks": {
+		"codeberg-npm-build": {
+			"command": "deno run --allow-all --no-prompt --quiet .codeberg-npm.build.ts",
+			"description": "Build for Codeberg NPM."
+		},
+		"codeberg-npm-check": {
+			"command": "deno task --cwd \"$(deno task codeberg-npm-var-distribution-relative)\" --eval \"npm publish --dry-run\"",
+			"description": "Check for Codeberg NPM."
+		},
+		"codeberg-npm-publish": {
+			"command": "deno task --cwd \"$(deno task codeberg-npm-var-distribution-relative)\" --eval \"npm publish --tag recent\"",
+			"description": "Publish to Codeberg NPM."
+		},
+		"codeberg-npm-var-distribution-relative": {
+			"command": "echo \"dist/codeberg-npm\"",
+			"description": "Variable of the Codeberg NPM distribution directory relative path."
+		},
+		"github-npm-build": {
+			"command": "deno run --allow-all --no-prompt --quiet .github-npm.build.ts",
+			"description": "Build for GitHub NPM."
+		},
+		"github-npm-check": {
+			"command": "deno task --cwd \"$(deno task github-npm-var-distribution-relative)\" --eval \"npm publish --dry-run\"",
+			"description": "Check for GitHub NPM."
+		},
+		"github-npm-publish": {
+			"command": "deno task --cwd \"$(deno task github-npm-var-distribution-relative)\" --eval \"npm publish --tag recent\"",
+			"description": "Publish to GitHub NPM."
+		},
+		"github-npm-var-distribution-relative": {
+			"command": "echo \"dist/github-npm\"",
+			"description": "Variable of the GitHub NPM distribution directory relative path."
+		},
 		"jsr-check": {
 			"command": "deno publish --allow-dirty --config \"$(deno task jsr-var-manifest-relative)\" --dry-run --no-check --no-provenance",
 			"description": "Check for JSR."
@@ -55,6 +87,22 @@
 		"jsr-var-manifest-relative": {
 			"command": "echo \"jsr.jsonc\"",
 			"description": "Variable of the JSR manifest file relative path."
+		},
+		"kaki87-npm-build": {
+			"command": "deno run --allow-all --no-prompt --quiet .kaki87-npm.build.ts",
+			"description": "Build for KaKi87 NPM."
+		},
+		"kaki87-npm-check": {
+			"command": "deno task --cwd \"$(deno task kaki87-npm-var-distribution-relative)\" --eval \"npm publish --dry-run\"",
+			"description": "Check for KaKi87 NPM."
+		},
+		"kaki87-npm-publish": {
+			"command": "deno task --cwd \"$(deno task kaki87-npm-var-distribution-relative)\" --eval \"npm publish --tag recent\"",
+			"description": "Publish to KaKi87 NPM."
+		},
+		"kaki87-npm-var-distribution-relative": {
+			"command": "echo \"dist/kaki87-npm\"",
+			"description": "Variable of the KaKi87 NPM distribution directory relative path."
 		},
 		"npm-build": {
 			"command": "deno run --allow-all --no-prompt --quiet .npm.build.ts",
