@@ -20,21 +20,21 @@ await invokeDenoNodeJSTransformer({
 			"iterate",
 			"iterator"
 		],
-		homepage: "https://codeberg.org/hugoalh/range-iterator-es#readme",
+		homepage: "https://github.com/hugoalh/range-iterator-es#readme",
 		bugs: {
-			url: "https://codeberg.org/hugoalh/range-iterator-es/issues"
+			url: "https://github.com/hugoalh/range-iterator-es/issues"
 		},
 		license: "MIT",
 		author: "hugoalh",
 		repository: {
 			type: "git",
-			url: "git+https://codeberg.org/hugoalh/range-iterator-es.git"
+			url: "git+https://github.com/hugoalh/range-iterator-es.git"
 		},
 		private: false,
 		publishConfig: {
 			access: "public"
 		}
 	},
-	outputDirectory: "dist/codeberg-npm",
+	outputDirectory: "dist/npm-github",
 	outputDirectoryPreEmpty: true
 });

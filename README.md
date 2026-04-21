@@ -2,9 +2,10 @@
 
 [**⚖️** MIT](./LICENSE.md)
 
-[![GitHub: hugoalh/range-iterator-es](https://img.shields.io/github/v/release/hugoalh/range-iterator-es?label=hugoalh/range-iterator-es&labelColor=181717&logo=github&logoColor=ffffff&sort=semver&style=flat "GitHub: hugoalh/range-iterator-es")](https://github.com/hugoalh/range-iterator-es)
-[![JSR: @hugoalh/range-iterator](https://img.shields.io/jsr/v/@hugoalh/range-iterator?label=@hugoalh/range-iterator&labelColor=F7DF1E&logo=jsr&logoColor=000000&style=flat "JSR: @hugoalh/range-iterator")](https://jsr.io/@hugoalh/range-iterator)
-[![NPM: @hugoalh/range-iterator](https://img.shields.io/npm/v/@hugoalh/range-iterator?label=@hugoalh/range-iterator&labelColor=CB3837&logo=npm&logoColor=ffffff&style=flat "NPM: @hugoalh/range-iterator")](https://www.npmjs.com/package/@hugoalh/range-iterator)
+🔗
+[GitHub](https://github.com/hugoalh/range-iterator-es)
+[JSR](https://jsr.io/@hugoalh/range-iterator)
+[NPM](https://www.npmjs.com/package/@hugoalh/range-iterator)
 
 An ECMAScript module to iterate between range.
 

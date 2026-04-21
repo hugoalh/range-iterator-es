@@ -10,11 +10,12 @@
 	},
 	"imports": { // IMPORTANT: Only for development dependencies!
 		"DNT": "jsr:@hugoalh/deno-nodejs-transformer@^0.8.0",
+		"NPP": "https://raw.githubusercontent.com/hugoalh/npm-publish-patcher/caab384376582dd7563b255c740e8b322f82247e/deno/cli.ts",
 		"STD_JSONC": "jsr:@std/jsonc@^1.0.2"
 	},
 	"lint": {
 		"plugins": [
-			"jsr:@hugoalh/deno-lint-rules@^0.10.0/hugoalh/library"
+			"jsr:@hugoalh/deno-lint-rules@^0.14.0/presets/library"
 		],
 		"rules": {
 			"tags": [
@@ -44,81 +45,61 @@
 	},
 	"lock": false,
 	"tasks": {
-		"codeberg-npm-build": {
-			"command": "deno run --allow-all --no-prompt --quiet .codeberg-npm.build.ts",
-			"description": "Build for Codeberg NPM."
-		},
-		"codeberg-npm-check": {
-			"command": "deno task --cwd \"$(deno task codeberg-npm-var-distribution-relative)\" --eval \"npm publish --dry-run\"",
-			"description": "Check for Codeberg NPM."
-		},
-		"codeberg-npm-publish": {
-			"command": "deno task --cwd \"$(deno task codeberg-npm-var-distribution-relative)\" --eval \"npm publish --tag recent\"",
-			"description": "Publish to Codeberg NPM."
-		},
-		"codeberg-npm-var-distribution-relative": {
-			"command": "echo \"dist/codeberg-npm\"",
-			"description": "Variable of the Codeberg NPM distribution directory relative path."
-		},
-		"github-npm-build": {
-			"command": "deno run --allow-all --no-prompt --quiet .github-npm.build.ts",
-			"description": "Build for GitHub NPM."
-		},
-		"github-npm-check": {
-			"command": "deno task --cwd \"$(deno task github-npm-var-distribution-relative)\" --eval \"npm publish --dry-run\"",
-			"description": "Check for GitHub NPM."
-		},
-		"github-npm-publish": {
-			"command": "deno task --cwd \"$(deno task github-npm-var-distribution-relative)\" --eval \"npm publish --tag recent\"",
-			"description": "Publish to GitHub NPM."
-		},
-		"github-npm-var-distribution-relative": {
-			"command": "echo \"dist/github-npm\"",
-			"description": "Variable of the GitHub NPM distribution directory relative path."
-		},
 		"jsr-check": {
-			"command": "deno publish --allow-dirty --config \"$(deno task jsr-var-manifest-relative)\" --dry-run --no-check --no-provenance",
+			"command": "deno task jsr-publish --dry-run --no-provenance",
 			"description": "Check for JSR."
 		},
 		"jsr-publish": {
-			"command": "deno publish --allow-dirty --config \"$(deno task jsr-var-manifest-relative)\" --no-check",
+			"command": "deno publish --allow-dirty --config \"jsr.jsonc\" --no-check",
 			"description": "Publish to JSR."
 		},
-		"jsr-var-manifest-relative": {
-			"command": "echo \"jsr.jsonc\"",
-			"description": "Variable of the JSR manifest file relative path."
+		"npm-codeberg-build": {
+			"command": "deno run --allow-all --no-prompt --quiet .npm-codeberg.build.ts",
+			"description": "Build for Codeberg NPM."
 		},
-		"kaki87-npm-build": {
-			"command": "deno run --allow-all --no-prompt --quiet .kaki87-npm.build.ts",
+		"npm-codeberg-check": {
+			"command": "deno task npm-codeberg-publish --dry-run",
+			"description": "Check for Codeberg NPM."
+		},
+		"npm-codeberg-publish": {
+			"command": "deno run --allow-all --no-prompt --quiet NPP --cleanup --cwd \"dist/npm-codeberg\" --ignore-ppv --provenance false --registry \"codeberg.org/api/packages/hugoalh/npm\"",
+			"description": "Publish to Codeberg NPM."
+		},
+		"npm-github-build": {
+			"command": "deno run --allow-all --no-prompt --quiet .npm-github.build.ts",
+			"description": "Build for GitHub NPM."
+		},
+		"npm-github-check": {
+			"command": "deno task npm-github-publish --dry-run",
+			"description": "Check for GitHub NPM."
+		},
+		"npm-github-publish": {
+			"command": "deno run --allow-all --no-prompt --quiet NPP --cleanup --cwd \"dist/npm-github\" --ignore-ppv --provenance false --registry \"npm.pkg.github.com\"",
+			"description": "Publish to GitHub NPM."
+		},
+		"npm-kaki87-build": {
+			"command": "deno run --allow-all --no-prompt --quiet .npm-kaki87.build.ts",
 			"description": "Build for KaKi87 NPM."
 		},
-		"kaki87-npm-check": {
-			"command": "deno task --cwd \"$(deno task kaki87-npm-var-distribution-relative)\" --eval \"npm publish --dry-run\"",
+		"npm-kaki87-check": {
+			"command": "deno task npm-kaki87-publish --dry-run",
 			"description": "Check for KaKi87 NPM."
 		},
-		"kaki87-npm-publish": {
-			"command": "deno task --cwd \"$(deno task kaki87-npm-var-distribution-relative)\" --eval \"npm publish --tag recent\"",
+		"npm-kaki87-publish": {
+			"command": "deno run --allow-all --no-prompt --quiet NPP --cleanup --cwd \"dist/npm-kaki87\" --ignore-ppv --provenance false --registry \"git.kaki87.net/api/packages/hugoalh/npm\"",
 			"description": "Publish to KaKi87 NPM."
 		},
-		"kaki87-npm-var-distribution-relative": {
-			"command": "echo \"dist/kaki87-npm\"",
-			"description": "Variable of the KaKi87 NPM distribution directory relative path."
-		},
-		"npm-build": {
-			"command": "deno run --allow-all --no-prompt --quiet .npm.build.ts",
+		"npm-npm-build": {
+			"command": "deno run --allow-all --no-prompt --quiet .npm-npm.build.ts",
 			"description": "Build for NPM."
 		},
-		"npm-check": {
-			"command": "deno task --cwd \"$(deno task npm-var-distribution-relative)\" --eval \"npm publish --dry-run\"",
+		"npm-npm-check": {
+			"command": "deno task npm-npm-publish --dry-run",
 			"description": "Check for NPM."
 		},
-		"npm-publish": {
-			"command": "deno task --cwd \"$(deno task npm-var-distribution-relative)\" --eval \"npm publish --tag recent\"",
+		"npm-npm-publish": {
+			"command": "deno run --allow-all --no-prompt --quiet NPP --cleanup --cwd \"dist/npm-npm\" --ignore-ppv",
 			"description": "Publish to NPM."
-		},
-		"npm-var-distribution-relative": {
-			"command": "echo \"dist/npm\"",
-			"description": "Variable of the NPM distribution directory relative path."
 		}
 	},
 	"unstable": [
