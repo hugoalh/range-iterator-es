@@ -4,8 +4,8 @@
 
 🔗
 [GitHub](https://github.com/hugoalh/range-iterator-es)
-[JSR](https://jsr.io/@hugoalh/range-iterator)
-[NPM](https://www.npmjs.com/package/@hugoalh/range-iterator)
+● [JSR](https://jsr.io/@hugoalh/range-iterator)
+● [NPM](https://www.npmjs.com/package/@hugoalh/range-iterator)
 
 An ECMAScript module to iterate between range.
 
