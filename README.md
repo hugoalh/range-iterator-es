@@ -3,7 +3,8 @@
 [**⚖️** MIT](./LICENSE.md)
 
 🔗
-[GitHub](https://github.com/hugoalh/range-iterator-es)
+[DistBoard @hugoalh](https://hugoalh.github.io/distboard/range_iterator_ecmascript)
+● [GitHub](https://github.com/hugoalh/range-iterator-es)
 ● [JSR](https://jsr.io/@hugoalh/range-iterator)
 ● [NPM](https://www.npmjs.com/package/@hugoalh/range-iterator)
 

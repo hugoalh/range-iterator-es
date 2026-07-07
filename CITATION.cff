@@ -7,6 +7,7 @@ authors:
   - name: "HUGOALH"
     alias: "hugoalh"
 repository-code: "https://github.com/hugoalh/range-iterator-es"
+abstract: "An ECMAScript module to iterate between range."
 keywords:
   - "ecmascript"
   - "es"
