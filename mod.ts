@@ -218,7 +218,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 			step: options.step ?? 1n
 		});
 	}
-	if (typeof start === "number" && typeof end === "number") {
+	if (typeof start === "number" && !Number.isNaN(start) && typeof end === "number" && !Number.isNaN(end)) {
 		if (typeof options.step !== "undefined") {
 			if (!(typeof options.step === "number" && options.step > 0)) {
 				throw new RangeError(`\`${options.step}\` (parameter \`options.step\`) is not a number which is > 0!`);
