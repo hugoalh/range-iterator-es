@@ -45,3 +45,13 @@ Deno.test("Character u0~u10FFFF", { permissions: "none" }, () => {
 Deno.test("Character u10FFFF~u0", { permissions: "none" }, () => {
 	deepStrictEqual(Array.from(rangeIterator("\u{10FFFF}", "\u0000")).length, 1114112);
 });
+Deno.test("Leak Reference 1", { permissions: "none" }, () => {
+	const skip = new Set([3]);
+	deepStrictEqual(Array.from(rangeIterator(1, 5, {
+		excludeEnd: true,
+		excludes: skip,
+		excludeStart: true
+	})), [2, 4]);
+	deepStrictEqual(Array.from(skip.values()), [3]);
+	deepStrictEqual(Array.from(rangeIterator(1, 5, { excludes: skip })), [1, 2, 4, 5]);
+});

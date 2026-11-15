@@ -197,15 +197,15 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 	) ? { step: param2 } : (param2 ?? {});
 	const {
 		excludeEnd = false,
-		excludes,
+		excludes = [],
 		excludeStart = false
 	}: RangeIteratorOptions<bigint | number | string> = options;
-	const excludesFmt: Set<bigint | number | string> = (excludes instanceof Set) ? excludes : new Set(excludes);
+	const excludesFinal: Set<bigint | number | string> = new Set((excludes instanceof Set) ? Array.from(excludes.values()) : excludes);
 	if (excludeEnd) {
-		excludesFmt.add(end);
+		excludesFinal.add(end);
 	}
 	if (excludeStart) {
-		excludesFmt.add(start);
+		excludesFinal.add(start);
 	}
 	if (typeof start === "bigint" && typeof end === "bigint") {
 		if (typeof options.step !== "undefined") {
@@ -214,7 +214,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 			}
 		}
 		return rangeIteratorNumerics(start, end, {
-			excludes: excludesFmt as Set<bigint>,
+			excludes: excludesFinal as Set<bigint>,
 			step: options.step ?? 1n
 		});
 	}
@@ -225,7 +225,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 			}
 		}
 		return rangeIteratorNumerics(start, end, {
-			excludes: excludesFmt as Set<number>,
+			excludes: excludesFinal as Set<number>,
 			step: options.step ?? 1
 		});
 	}
@@ -238,7 +238,7 @@ export function rangeIterator(start: bigint | number | string, end: bigint | num
 			}
 		}
 		return rangeIteratorCharacters(startCodePoint, endCodePoint, {
-			excludes: excludesFmt as Set<string>,
+			excludes: excludesFinal as Set<string>,
 			step: options.step ?? 1
 		});
 	}
